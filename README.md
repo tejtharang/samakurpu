@@ -1,0 +1,2 @@
+# samakurpu
+Provision AWS resources 
