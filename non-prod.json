@@ -1,0 +1,10 @@
+{
+  "Resources": {
+    "RajyamNonProdS3Bucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties" : {
+        "BucketName": "rajyam-non-prod-s3-bucket"
+      }
+    }
+  }
+}
