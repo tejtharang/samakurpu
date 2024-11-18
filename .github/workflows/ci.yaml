@@ -3,9 +3,9 @@ name: Deploy to AWS
 on:
   push:
     branches:
-      - main  # Trigger for main branch
+      - '*'
     tags:
-      - 'release-*'  # Trigger for tags starting with 'release-'
+      - 'release-*'
   workflow_dispatch:  # Allows manual triggering of the non-prod deployment
 
 permissions:
