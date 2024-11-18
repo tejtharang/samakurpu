@@ -14,7 +14,7 @@ permissions:
 jobs:
   validate-credentials:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/*'
+    if: startsWith(github.ref, 'refs/heads/KAN-')
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
