@@ -3,15 +3,31 @@ name: Deploy to AWS
 on:
   push:
     branches:
-      - main  # Trigger for main branch
+      - '*'
     tags:
-      - 'release-*'  # Trigger for tags starting with 'release-'
+      - 'release-*'
   workflow_dispatch:  # Allows manual triggering of the non-prod deployment
 
 permissions:
   id-token: write   # This is required for requesting the JWT
   contents: read
 jobs:
+  validate-credentials:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/KAN-')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_SECRET_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Verify AWS credentials
+        run: aws sts get-caller-identity
+
   deploy-non-prod:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'  # Only run on pushes to the main branch
@@ -22,7 +38,7 @@ jobs:
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_SECRET_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
@@ -42,7 +58,7 @@ jobs:
       - name: Set up AWS CLI
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-access-key-id: ${{ secrets.AWS_SECRET_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1  # Update to your desired region
 
