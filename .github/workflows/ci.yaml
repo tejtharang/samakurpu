@@ -1,0 +1,50 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main  # Trigger for main branch
+    tags:
+      - 'release-*'  # Trigger for tags starting with 'release-'
+  workflow_dispatch:  # Allows manual triggering of the non-prod deployment
+
+jobs:
+  deploy-non-prod:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'  # Only run on pushes to the main branch
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
+      - name: Deploy to Non-Prod
+        run: |
+          aws cloudformation deploy \
+            --template-file non-prod.json \
+            --stack-name non-prod-stack
+
+  deploy-prod:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/release-')  # Only run on tags starting with 'release-'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1  # Update to your desired region
+
+      - name: Deploy to Prod
+        run: |
+          aws cloudformation deploy \
+            --template-file prod.json \
+            --stack-name prod-stack
