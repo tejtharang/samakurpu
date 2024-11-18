@@ -8,6 +8,9 @@ on:
       - 'release-*'  # Trigger for tags starting with 'release-'
   workflow_dispatch:  # Allows manual triggering of the non-prod deployment
 
+permissions:
+  id-token: write   # This is required for requesting the JWT
+  contents: read
 jobs:
   deploy-non-prod:
     runs-on: ubuntu-latest
