@@ -1,5 +1,61 @@
 Resources:
+  # Storage
+  ## S3 buckets
   RajyamNonProdS3Bucket:
     Type: "AWS::S3::Bucket"
     Properties:
       BucketName: "rajyam-non-prod-s3-bucket"
+
+  # IAM Policy
+  ## Users
+  LocalProdParameterReader:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "local-parameter-reader"
+
+  NonProdParameterReader:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "non-prod-parameter-reader"
+
+  ## User Groups
+  NonProdParameterReaderGroup:
+    Type: "AWS::IAM::Group"
+    Properties:
+      GroupName: "non-prod-parameter-reader-group"
+
+  ## User - User Group association
+  NonProdParameterReaderGroupMembership:
+    Type: "AWS::IAM::UserToGroupAddition"
+    Properties:
+      GroupName:
+        Ref: "NonProdParameterReaderGroup"
+      Users:
+        - Ref: "LocalProdParameterReader"
+        - Ref: "NonProdParameterReaderGroup"
+
+  ## Policy
+  NonProdParameterStorePolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "non-prod-parameter-store-policy"
+      Groups:
+        - Ref: "NonProdParameterReaderGroup"
+      PolicyDocument:
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "ssm:GetParameter"
+            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/DISCORD_APP_ID"
+          - Effect: "Allow"
+            Action:
+              - "ssm:GetParameter"
+            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/DISCORD_BOT_V1_TOKEN"
+          - Effect: "Allow"
+            Action:
+              - "ssm:GetParameter"
+            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/LANGCHAIN_API_KEY"
+          - Effect: "Allow"
+            Action:
+              - "ssm:GetParameter"
+            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/OPENAI_API_KEY"
