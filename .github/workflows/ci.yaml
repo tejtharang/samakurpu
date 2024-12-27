@@ -45,7 +45,7 @@ jobs:
       - name: Deploy to Non-Prod
         run: |
           aws cloudformation deploy \
-            --template-file non-prod.json \
+            --template-file non-prod.yaml \
             --stack-name non-prod-stack
 
   deploy-prod:
@@ -65,5 +65,5 @@ jobs:
       - name: Deploy to Prod
         run: |
           aws cloudformation deploy \
-            --template-file prod.json \
+            --template-file prod.yaml \
             --stack-name prod-stack
