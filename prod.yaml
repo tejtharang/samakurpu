@@ -1,0 +1,5 @@
+Resources:
+  RajyamProdS3Bucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      BucketName: "rajyam-prod-s3-bucket"
