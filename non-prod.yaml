@@ -35,27 +35,27 @@ Resources:
         - Ref: "NonProdParameterReaderGroup"
 
   ## Policy
-  NonProdParameterStorePolicy:
-    Type: "AWS::IAM::Policy"
-    Properties:
-      PolicyName: "non-prod-parameter-store-policy"
-      Groups:
-        - Ref: "NonProdParameterReaderGroup"
-      PolicyDocument:
-        Statement:
-          - Effect: "Allow"
-            Action:
-              - "ssm:GetParameter"
-            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/DISCORD_APP_ID"
-          - Effect: "Allow"
-            Action:
-              - "ssm:GetParameter"
-            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/DISCORD_BOT_V1_TOKEN"
-          - Effect: "Allow"
-            Action:
-              - "ssm:GetParameter"
-            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/LANGCHAIN_API_KEY"
-          - Effect: "Allow"
-            Action:
-              - "ssm:GetParameter"
-            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/OPENAI_API_KEY"
+#  NonProdParameterStorePolicy:
+#    Type: "AWS::IAM::Policy"
+#    Properties:
+#      PolicyName: "non-prod-parameter-store-policy"
+#      Groups:
+#        - Ref: "NonProdParameterReaderGroup"
+#      PolicyDocument:
+#        Statement:
+#          - Effect: "Allow"
+#            Action:
+#              - "ssm:GetParameter"
+#            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/DISCORD_APP_ID"
+#          - Effect: "Allow"
+#            Action:
+#              - "ssm:GetParameter"
+#            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/DISCORD_BOT_V1_TOKEN"
+#          - Effect: "Allow"
+#            Action:
+#              - "ssm:GetParameter"
+#            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/LANGCHAIN_API_KEY"
+#          - Effect: "Allow"
+#            Action:
+#              - "ssm:GetParameter"
+#            Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/OPENAI_API_KEY"
