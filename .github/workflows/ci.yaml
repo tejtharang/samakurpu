@@ -46,7 +46,8 @@ jobs:
         run: |
           aws cloudformation deploy \
             --template-file non-prod.yaml \
-            --stack-name non-prod-stack
+            --stack-name non-prod-stack \
+            --capabilities CAPABILITY_NAMED_IAM
 
   deploy-prod:
     runs-on: ubuntu-latest
@@ -66,4 +67,5 @@ jobs:
         run: |
           aws cloudformation deploy \
             --template-file prod.yaml \
-            --stack-name prod-stack
+            --stack-name prod-stack \
+            --capabilities CAPABILITY_NAMED_IAM
