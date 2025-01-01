@@ -6,6 +6,16 @@ Resources:
     Properties:
       BucketName: "rajyam-non-prod-s3-bucket"
 
+  ## Dynamo DB
+  RajyamNonProdDynamoDB:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "rajyam-non-prod-dynamo-db"
+      KeySchema:
+        - AttributeName: ""
+          KeyType: ""
+
+
   # IAM Policy
   ## Users
   LocalParameterReader:
