@@ -7,15 +7,38 @@ Resources:
       BucketName: "rajyam-non-prod-s3-bucket"
 
   ## Dynamo DB
-  RajyamNonProdDynamoDB:
+  ChainTableNonProd:
     Type: "AWS::DynamoDB::Table"
     Properties:
-      TableName: "rajyam-non-prod-dynamo-db"
+      TableName: "Chain"
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: S
+        - AttributeName: "type"
+          AttributeType: S
+        - AttributeName: "title"
+          AttributeType: S
+        - AttributeName: "generatedTitle"
+          AttributeType: S
+        - AttributeName: "createdAt"
+          AttributeType: N
+        - AttributeName: "updatedAt"
+          AttributeType: N
+        - AttributeName: "participants"
+          AttributeType: L
+        - AttributeName: "summary"
+          AttributeType: S
+        - AttributeName: "messages"
+          AttributeType: L
       KeySchema:
-        - AttributeName: ""
-          KeyType: ""
-
-
+        - AttributeName: "id"
+          KeyType: HASH
+        - AttributeName: "lastActive"
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 5
+        WriteCapacityUnits: 5
+        BillingMode: PROVISIONED
   # IAM Policy
   ## Users
   LocalParameterReader:
@@ -28,12 +51,26 @@ Resources:
     Properties:
       UserName: "non-prod-parameter-reader"
 
+  LocalDynamoRWUser:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "local-dynamo-rw-user"
+
+  NonProdDynamoRWUser:
+    Type: "AWS::IAM::User"
+    Properties:
+      UserName: "non-prod-dynamo-rw-user"
+
   ## User Groups
   NonProdParameterReaderGroup:
     Type: "AWS::IAM::Group"
     Properties:
       GroupName: "non-prod-parameter-reader-group"
 
+  NonProdDynamoRWGroup:
+    Type: "AWS::IAM::Group"
+    Properties:
+      GroupName: "non-prod-dynamo-rw-group"
   ## User - User Group association
   NonProdParameterReaderGroupMembership:
     Type: "AWS::IAM::UserToGroupAddition"
@@ -44,6 +81,14 @@ Resources:
         - Ref: "LocalParameterReader"
         - Ref: "NonProdParameterReader"
 
+  NonProdDynamoRWGroupMembership:
+    Type: "AWS::IAM::UserToGroupAddition"
+    Properties:
+      GroupName:
+        Ref: "NonProdDynamoRWGroup"
+      Users:
+        - Ref: "LocalDynamoRWUser"
+        - Ref: "NonProdDynamoRWUser"
   ## Policy
   NonProdParameterStorePolicy:
     Type: "AWS::IAM::Policy"
@@ -69,3 +114,22 @@ Resources:
             Action:
               - "ssm:GetParameter"
             Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/OPENAI_API_KEY"
+  NonProdDynamoRWPolicy:
+    Type: "AWS::IAM::Policy"
+    Properties:
+      PolicyName: "non-prod-dynamo-rw-policy"
+      Groups:
+        - Ref: "NonProdDynamoRWGroup"
+      PolicyDocument:
+        Statement:
+          - Effect: "Allow"
+            Action:
+              - "dynamodb:GetItem"
+              - "dynamodb:BatchGetItem"
+              - "dynamodb:PutItem"
+              - "dynamodb:UpdateItem"
+              - "dynamodb:DeleteItem"
+              - "dynamodb:BatchWriteItem"
+              - "dynamodb:Query"
+              - "dynamodb:Scan"
+            Resource: !GetAtt ChainTableNonProd.Arn
