@@ -41,25 +41,15 @@ Resources:
         BillingMode: PROVISIONED
   # IAM Policy
   ## Users
-  LocalParameterReader:
+  LocalUser:
     Type: "AWS::IAM::User"
     Properties:
-      UserName: "local-parameter-reader"
+      UserName: "local-user"
 
-  NonProdParameterReader:
+  NonProdUser:
     Type: "AWS::IAM::User"
     Properties:
-      UserName: "non-prod-parameter-reader"
-
-  LocalDynamoRWUser:
-    Type: "AWS::IAM::User"
-    Properties:
-      UserName: "local-dynamo-rw-user"
-
-  NonProdDynamoRWUser:
-    Type: "AWS::IAM::User"
-    Properties:
-      UserName: "non-prod-dynamo-rw-user"
+      UserName: "non-prod-user"
 
   ## User Groups
   NonProdParameterReaderGroup:
@@ -78,8 +68,8 @@ Resources:
       GroupName:
         Ref: "NonProdParameterReaderGroup"
       Users:
-        - Ref: "LocalParameterReader"
-        - Ref: "NonProdParameterReader"
+        - Ref: "LocalUser"
+        - Ref: "NonProdUser"
 
   NonProdDynamoRWGroupMembership:
     Type: "AWS::IAM::UserToGroupAddition"
@@ -87,8 +77,8 @@ Resources:
       GroupName:
         Ref: "NonProdDynamoRWGroup"
       Users:
-        - Ref: "LocalDynamoRWUser"
-        - Ref: "NonProdDynamoRWUser"
+        - Ref: "LocalUser"
+        - Ref: "NonProdUser"
   ## Policy
   NonProdParameterStorePolicy:
     Type: "AWS::IAM::Policy"
