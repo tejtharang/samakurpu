@@ -38,7 +38,7 @@ Resources:
       ProvisionedThroughput:
         ReadCapacityUnits: 5
         WriteCapacityUnits: 5
-        BillingMode: PROVISIONED
+      BillingMode: PROVISIONED
   # IAM Policy
   ## Users
   LocalUser:
