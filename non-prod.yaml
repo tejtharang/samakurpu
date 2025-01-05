@@ -33,7 +33,7 @@ Resources:
       KeySchema:
         - AttributeName: "id"
           KeyType: HASH
-        - AttributeName: "lastActive"
+        - AttributeName: "updatedAt"
           KeyType: RANGE
       ProvisionedThroughput:
         ReadCapacityUnits: 5
