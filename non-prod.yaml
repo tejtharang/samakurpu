@@ -6,25 +6,6 @@ Resources:
     Properties:
       BucketName: "rajyam-non-prod-s3-bucket"
 
-  ## Dynamo DB
-  ChainTableNonProd:
-    Type: "AWS::DynamoDB::Table"
-    Properties:
-      TableName: "Chain"
-      AttributeDefinitions:
-        - AttributeName: "id"
-          AttributeType: S
-        - AttributeName: "updatedAt"
-          AttributeType: N
-      KeySchema:
-        - AttributeName: "id"
-          KeyType: HASH
-        - AttributeName: "updatedAt"
-          KeyType: RANGE
-      ProvisionedThroughput:
-        ReadCapacityUnits: 5
-        WriteCapacityUnits: 5
-      BillingMode: PROVISIONED
   # IAM Policy
   ## Users
   LocalUser:
@@ -43,25 +24,12 @@ Resources:
     Properties:
       GroupName: "non-prod-parameter-reader-group"
 
-  NonProdDynamoRWGroup:
-    Type: "AWS::IAM::Group"
-    Properties:
-      GroupName: "non-prod-dynamo-rw-group"
   ## User - User Group association
   NonProdParameterReaderGroupMembership:
     Type: "AWS::IAM::UserToGroupAddition"
     Properties:
       GroupName:
         Ref: "NonProdParameterReaderGroup"
-      Users:
-        - Ref: "LocalUser"
-        - Ref: "NonProdUser"
-
-  NonProdDynamoRWGroupMembership:
-    Type: "AWS::IAM::UserToGroupAddition"
-    Properties:
-      GroupName:
-        Ref: "NonProdDynamoRWGroup"
       Users:
         - Ref: "LocalUser"
         - Ref: "NonProdUser"
@@ -90,22 +58,3 @@ Resources:
             Action:
               - "ssm:GetParameter"
             Resource: "arn:aws:ssm:us-east-2:730335557466:parameter/OPENAI_API_KEY"
-  NonProdDynamoRWPolicy:
-    Type: "AWS::IAM::Policy"
-    Properties:
-      PolicyName: "non-prod-dynamo-rw-policy"
-      Groups:
-        - Ref: "NonProdDynamoRWGroup"
-      PolicyDocument:
-        Statement:
-          - Effect: "Allow"
-            Action:
-              - "dynamodb:GetItem"
-              - "dynamodb:BatchGetItem"
-              - "dynamodb:PutItem"
-              - "dynamodb:UpdateItem"
-              - "dynamodb:DeleteItem"
-              - "dynamodb:BatchWriteItem"
-              - "dynamodb:Query"
-              - "dynamodb:Scan"
-            Resource: !GetAtt ChainTableNonProd.Arn
