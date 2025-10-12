@@ -5,6 +5,22 @@ Resources:
     Type: "AWS::S3::Bucket"
     Properties:
       BucketName: "rajyam-non-prod-s3-bucket"
+  # Dynamo DB
+  GenericDynamoDBTable:
+    Type: "AWS::DynamoDB::Table"
+    Properties:
+      TableName: "non-prodgeneric-table"
+      AttributeDefinitions:
+        - AttributeName: "id"
+          AttributeType: "S"
+        - AttributeName: "updatedAt"
+          AttributeType: "N"
+      KeySchema:
+        - AttributeName: "id"
+          KeyType: "HASH"
+        - AttributeName: "updatedAt"
+          KeyType: "RANGE"
+      BillingMode: "PAY_PER_REQUEST"
 
   # IAM Policy
   ## Users
